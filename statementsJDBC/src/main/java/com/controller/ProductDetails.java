@@ -45,11 +45,11 @@ public class ProductDetails extends HttpServlet {
 			InputStream in = getServletContext().getResourceAsStream("/WEB-INF/config.properties");
 
 //			InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream("config.properties");
-
-			if (in == null) {
-				out.println("config.properties NOT FOUND!");
-				return;
-			}
+//
+//			if (in == null) {
+//				out.println("config.properties NOT FOUND!");
+//				return;
+//			}
 
 			Properties props = new Properties();
 			props.load(in);
