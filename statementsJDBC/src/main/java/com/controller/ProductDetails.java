@@ -3,6 +3,8 @@ package com.controller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -56,17 +58,27 @@ public class ProductDetails extends HttpServlet {
 
 			DBConnection conn = new DBConnection(props.getProperty("url"), props.getProperty("userid"),
 					props.getProperty("password"));
-			Statement stmt = conn.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
-					ResultSet.CONCUR_READ_ONLY);
-			stmt.executeUpdate(
-					"insert into eproduct (name, price, date_added) values ('New Product', 17800.00, now())");
-			ResultSet rst = stmt.executeQuery("select * from eproduct");
+//			Statement stmt = conn.getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+//					ResultSet.CONCUR_READ_ONLY);
+//			stmt.executeUpdate(
+//					"insert into eproduct (name, price, date_added) values ('New Product', 17800.00, now())");
+//			ResultSet rst = stmt.executeQuery("select * from eproduct");
+//
+//			while (rst.next()) {
+//				out.println(rst.getInt("ID") + ", " + rst.getString("name") + "<Br>");
+//			}
+//
+//			stmt.close();
+			
+			//for stored procedure. Everytime you refresh or run again, a new product will be added
+            CallableStatement stmt = conn.getConnection().prepareCall("{call add_product(?, ?)}");
+            stmt.setString(1, "new product");
+            stmt.setBigDecimal(2, new BigDecimal(1900.50));
+            stmt.executeUpdate();
+            
+            out.println("Stored procedure has been executed.<Br>");
+            stmt.close();
 
-			while (rst.next()) {
-				out.println(rst.getInt("ID") + ", " + rst.getString("name") + "<Br>");
-			}
-
-			stmt.close();
 
 			out.println("</body></html>");
 			conn.closeConnection();
